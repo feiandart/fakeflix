@@ -1,9 +1,9 @@
+@use '../../assets/mixins';
+
 .movieCard {
+    @include mixins.card-dimension();
+    flex: 0 0 auto;
     position: relative;
-    box-shadow: 0 0 6px rgba(0, 0, 0, 0.47);
-    border-radius: 4px;
-    width: 300px;
-    height: 200px;
     overflow: hidden;
     
     img {
@@ -13,13 +13,15 @@
     }
 
     p {
-        height: 20%;
+        height: 30%;
         width: 100%;
+        padding: 0 12px;
         display: flex;
         justify-content: center;
         position: absolute;
         bottom: 0;
-        font-size: 1.4rem;
+        font-size: 1.3rem;
         color: whitesmoke;
+        text-shadow: 0 0 4px rgba(0, 0, 0, 0.569);
     }
 }
