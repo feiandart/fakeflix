@@ -5,6 +5,13 @@
     flex: 0 0 auto;
     position: relative;
     overflow: hidden;
+    scroll-snap-align: center;
+    cursor: pointer;
+    transition: all 0.25s;
+
+    &:hover {
+        transform: scale(1.02);
+    }
     
     img {
         width: 100%;

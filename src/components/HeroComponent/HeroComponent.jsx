@@ -3,8 +3,6 @@ import styles from './hero.module.scss';
 
 const HeroComponent = ({ imageUrl, title = "placeholder" }) => {
 
-    console.log(title);
-
     return (
         <div className={ styles.heroContainer }>
             <h2>{ title }</h2>

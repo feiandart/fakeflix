@@ -4,3 +4,9 @@
     height: $height;
     box-shadow: 0 0 6px $color;
 }
+
+@mixin desktop() {
+    @media only screen and (min-width: 768px) {
+        @content
+    }
+}
