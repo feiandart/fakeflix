@@ -1,15 +1,28 @@
 /* eslint-disable react/prop-types */
-import styles from './hero.module.scss';
+import { useContext } from "react";
+import styles from "./hero.module.scss";
+import { globalContext } from "../../App";
 
-const HeroComponent = ({ imageUrl, title = "placeholder" }) => {
+const HeroComponent = ({ movie }) => {
+  const { setIsModalVisible, setMovieDetails } = useContext(globalContext);
 
-    return (
-        <div className={ styles.heroContainer }>
-            <h2>{ title }</h2>
-            <img src={ `https://image.tmdb.org/t/p/w500${imageUrl}` } alt="hero-img" />
-            <button className={ styles.heroBtn }>Discover more</button>
-        </div>
-    )
-}
+  const handleButtonClick = () => {
+      setIsModalVisible(true);
+      setMovieDetails(movie);
+  };
+
+  return (
+    <div className={styles.heroContainer}>
+      <h2>{movie.title}</h2>
+      <img
+        src={`https://image.tmdb.org/t/p/w500${movie.backdrop_path}`}
+        alt="hero-img"
+      />
+      <button onClick={handleButtonClick} className={styles.heroBtn}>
+        Discover more
+      </button>
+    </div>
+  );
+};
 
 export default HeroComponent;

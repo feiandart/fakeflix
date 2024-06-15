@@ -11,23 +11,19 @@ const Carousel = ({ list = [] }) => {
   const carouselRef = useRef();
   const movieCardRef = useRef();
 
-  
   const handleArrowClick = (type) => {
     const movieCardWidth = movieCardRef.current?.offsetWidth;
 
-    if (type === "left") {
-      carouselRef.current.scroll({
-        top: 0,
-        left: carouselRef.current.scrollLeft - movieCardWidth,
-        behavior: "smooth",
-      });
-    } else {
-      carouselRef.current.scroll({
-        top: 0,
-        left: carouselRef.current.scrollLeft + movieCardWidth,
-        behavior: "smooth",
-      });
-    }
+    const value =
+      type === "left"
+        ? carouselRef.current.scrollLeft - movieCardWidth
+        : carouselRef.current.scrollLeft + movieCardWidth;
+
+    carouselRef.current.scroll({
+      top: 0,
+      left: value,
+      behavior: "smooth",
+    });
   };
 
   return (
@@ -53,7 +49,7 @@ const Carousel = ({ list = [] }) => {
               refProp={movieCardRef}
               title={movie.original_title}
               imgUrl={movie.backdrop_path}
-              movie={ movie }
+              movie={movie}
               key={index}
             />
           );

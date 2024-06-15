@@ -1,51 +1,65 @@
-import { useEffect, useState } from "react";
+import { useLoaderData } from "react-router-dom";
+import { fetchMovies } from "./utils/api";
+import { popularURL, topRatedURL } from "./utils/endpoints";
+import { createContext, useState } from "react";
 import styles from "./app.module.scss";
-import HeroComponent from "./components/HeroComponent/HeroComponent";
-import NavBar from "./components/NavBar/NavBar";
-import { AUTH_KEY } from "../constants";
 import Carousel from "./components/Carousel/Carousel";
+import HeroComponent from "./components/HeroComponent/HeroComponent";
+import Modal from "./components/Modal/Modal";
+
+export const globalContext = createContext();
 
 function App() {
-  const [popularList, setPopularList] = useState([]);
-  const [topRatedList, setTopRatedList] = useState([]);
+  const [isModalVisible, setIsModalVisible] = useState(false);
+  const [movieDetails, setMovieDetails] = useState({});
 
-  useEffect(() => {
-    fetch("https://api.themoviedb.org/3/movie/popular", {
-      headers: {
-        accept: "application/json",
-        Authorization: `Bearer ${AUTH_KEY}`,
-      },
-    })
-      .then((res) => res.json())
-      .then((data) => {
-        setPopularList(data.results.filter((_, index) => index < 8));
-      });
+  const movies = useLoaderData();
 
-    fetch("https://api.themoviedb.org/3/movie/top_rated", {
-      headers: {
-        accept: "application/json",
-        Authorization: `Bearer ${AUTH_KEY}`,
-      },
-    }).then((res) => res.json()).then((data) => {
-      setTopRatedList(data.results.filter((_, index) => index < 8));
-    })
-  }, []);
+  const value = {
+    setIsModalVisible,
+    setMovieDetails,
+    movieDetails,
+  };
 
   return (
-    <main className={styles.mainContainer}>
-      <NavBar />
-      <HeroComponent
-        imageUrl={popularList[0]?.backdrop_path}
-        title={popularList[0]?.original_title}
-      />
-      <section className={styles.carouselSection}>
-        <Carousel list={popularList} />
-      </section>
-      <section className={styles.carouselSection}>
-        <Carousel list={topRatedList} />
-      </section>
-    </main>
+    <globalContext.Provider value={value}>
+      <main className={styles.mainContainer}>
+        <HeroComponent movie={movies.hero.movie} />
+        <section className={styles.carouselSection}>
+          <Carousel list={movies.popData} />
+        </section>
+
+        {movies.topRated && (
+          <section className={styles.carouselSection}>
+            <Carousel list={movies.topRated} />
+          </section>
+        )}
+        {/* questo sopra serve a non far spuntare le categorie se manca l'oggetto sotto */}
+        {isModalVisible && <Modal />}
+      </main>
+    </globalContext.Provider>
   );
 }
+
+/* le funzioni loader gestiscono informazioni dall'esterno e sono funzioni asincrone */
+export const appLoader = async () => {
+  const [popularData, topRatedData] = await Promise.all([
+    fetchMovies(popularURL),
+    fetchMovies(topRatedURL),
+  ]);
+  /* le promise dell'async hanno sempre bisogno di await
+    l'ordine degli oggetti dentro la const corrisponde a quello delle fetch interne
+    se ne può saltare uno facendo tipo pippo,, paperino, etc quindi 2 virgole */
+
+  const movies = {
+    hero: {
+      movie: popularData.results[0]
+    },
+    popData: popularData.results.filter((_, index) => index < 8),
+    topRated: topRatedData.results.filter((_, index) => index < 8),
+  };
+
+  return movies;
+};
 
 export default App;

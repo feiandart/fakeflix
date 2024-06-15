@@ -1,5 +1,9 @@
 .mainContainer {
-    .carouselSection {
-        padding: 40px;
-    }
+  .carouselSection {
+    padding: 40px;
+  }
+}
+
+::-webkit-scrollbar {
+  display: none;
 }
